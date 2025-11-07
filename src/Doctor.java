@@ -1,9 +1,14 @@
+import java.util.ArrayList;
+import java.util.List;
+
 public class Doctor extends User {
     private String address;
     private String department;
     private double price;
     private String description;
     private Schedule schedule;
+
+    private static List<Doctor> doctors=new ArrayList<>();
 
     public String getAddress() {
         return address;
@@ -41,11 +46,13 @@ public class Doctor extends User {
         return schedule;
     }
 
+    public static List<Doctor> getAllDoctors(){return doctors;}
+    public static void addDoctor(Doctor doctor){doctors.add(doctor);}
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
     }
-    public Doctor(String name, String email, int phone, String password, String role) {
-        super(name, email, phone, password, role);
+    public Doctor(String name, String email, int phone, String password) {
+        super(name, email, phone, password, "doctor");
         this.schedule = new Schedule();
     }
     public void addClinicInfo(String address, double price, String department, String description){
@@ -58,4 +65,11 @@ public class Doctor extends User {
         this.schedule = schedule;
     }
 
+    public static Doctor getDoctorById(int id){
+        for(Doctor d:doctors){
+            if(d.id==id)
+                return d;
+        }
+        return null;
+    }
 }

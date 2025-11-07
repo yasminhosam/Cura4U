@@ -1,11 +1,13 @@
 import java.util.ArrayList;
-import java.util.Objects;
-
+import java.util.List;
 public class User {
+
+    private static ArrayList<User> users = new ArrayList<>();
     protected String name, email, password, role;
     protected int id;
     protected int phone;
     private static int cntUsers = 0;
+    private static User currentUser=null;
 
     public User(String name, String email, int phone, String password, String role) {
         cntUsers++;
@@ -17,30 +19,108 @@ public class User {
         this.role = role;
     }
 
-    private static ArrayList<User> users = new ArrayList<>();
+    public String getName() {
+        return name;
+    }
 
-    public void signUp(String name, String email, String password, int phone, String role) {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getPhone() {
+        return phone;
+    }
+
+    public void setPhone(int phone) {
+        this.phone = phone;
+    }
+
+
+    public static void signUp(User user) {
         boolean exists = users.stream()
-                .anyMatch(u -> u.email.equals(email) || u.name.equals(name));
+                .anyMatch(u -> u.email.equals(user.email) || u.name.equals(user.name));
         if(exists){
             System.out.println("User with this name or email already exists!");
             return;
         }
 
-        User user = new User(name, email, phone, password, role);
         users.add(user);
-        System.out.println("Signed up successfully: "+name);
+        System.out.println("Signed up successfully: "+user.name);
+
+        if (user.getRole().equals("doctor")) {
+            Doctor.addDoctor((Doctor) user);
+        }
     }
 
-    public void login(String name, String password) {
+    public static void login(String name, String password) {
         User user = users.stream()
                 .filter(u ->u.name.equals(name) && u.password.equals(password))
                 .findFirst()
                 .orElse(null);
 
-        if(user !=null)
+        if(user !=null){
+            currentUser=user;
             System.out.println("Login successful welcome, "+user.name);
+        }
         else
             System.out.println("Invalid username or password");
+    }
+
+    public static void logout(){
+//        User user=users.stream()
+//                .filter(u->u.id == this.id)
+//                .findFirst()
+//                .orElse(null);
+        if(currentUser !=null){
+            System.out.println(currentUser.getName() + " logged out successfully.");
+            currentUser=null;
+        }
+        else
+            System.out.println("User not found!");
+    }
+    public void viewReservations(){
+
+        List<Reservation> userReservations=Reservation.getAllReservations().stream()
+                .filter(r-> r.getDoctorId()==this.id || r.getPatientId()==this.id)
+                .toList();
+
+        if(userReservations.isEmpty())
+            System.out.println("No reservations found for you");
+        else {
+            System.out.println("Reservation for "+this.name+":");
+            userReservations.forEach(System.out::println);
+        }
     }
 }
