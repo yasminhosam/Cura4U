@@ -1,34 +1,54 @@
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Rate {
     // should be static
-        private static HashMap<Integer, List<Double>> scores=new HashMap<>(); // doctorId -> list of ratings
-        private Reservation reservation;
+    private static HashMap<Integer, List<Double>> scores=new HashMap<>(); // doctorId -> list of ratings
+    private Reservation reservation;
 
-        public Rate(Reservation reservation) {
-            this.reservation = reservation;
+    public Rate(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+    public void addingRate(double score) {
+        if (reservation == null) {
+            System.out.println("❌ Error: No reservation found for this rating.");
+            return;
         }
 
-        public void rateDoctor(double score) {
-            if (reservation == null) {
-                System.out.println("❌ Error: No reservation found for this rating.");
-                return;
-            }
+        if (score < 0 || score > 5) {
+            System.out.println(" Invalid score! Please enter a value between 0 and 5.");
+            return;
+        }
 
-            if (score < 0 || score > 5) {
-                System.out.println(" Invalid score! Please enter a value between 0 and 5.");
-                return;
-            }
+        int doctorId = reservation.getDoctorId();
+        // This is the new logic:
+        Double oldScore = reservation.getCurrentRating(); // Get the old score (null if new)
 
-            int doctorId = reservation.getDoctorId();
-            scores.putIfAbsent(doctorId, new ArrayList<>());
-            scores.get(doctorId).add(score);
+        scores.putIfAbsent(doctorId, new ArrayList<>());
+        List<Double> doctorRatings = scores.get(doctorId);
 
+        if (oldScore != null) {
+
+            // Remove the old score from the list
+            doctorRatings.remove(oldScore);
+            // Add the new score to the list
+            doctorRatings.add(score);
+            // Update the reservation's saved rating
+            reservation.setCurrentRating(score);
+            System.out.println(" Rating for reservation " + reservation.getId() + " UPDATED from " + oldScore + " to " + score);
+
+        } else {
+            // --- THIS IS A NEW RATING ---
+            // 1. Add the new score
+            doctorRatings.add(score);
+            // 2. Save the rating to the reservation
+            reservation.setCurrentRating(score);
             System.out.println(" Added rating " + score + " for Doctor " + reservation.getDoctorId());
         }
+    }
 
 //        public double getAvgRate() {
 //            double total = 0;
@@ -64,24 +84,25 @@ public class Rate {
     }
 
 
-        public void viewRates() {
-            // Get the specific doctor ID from the instance's reservation
-            int doctorId = this.reservation.getDoctorId();
-            System.out.println("\nRatings for Doctor ID: " + doctorId);
+    public void viewRates() {
+        // Get the specific doctor ID from the instance's reservation
+        int doctorId = this.reservation.getDoctorId();
+        Doctor doctor=Doctor.getDoctorById(doctorId);
+        System.out.println("\nRatings for Doctor ID: " + doctor.getName());
 
-            // Check if this specific doctor has any ratings
-            if (!scores.containsKey(doctorId) || scores.get(doctorId).isEmpty()) {
-                System.out.println(" No ratings yet for this doctor.");
-                return;
-            }
+        // Check if this specific doctor has any ratings
+        if (!scores.containsKey(doctorId) || scores.get(doctorId).isEmpty()) {
+            System.out.println(" No ratings yet for this doctor.");
+            return;
+        }
 
-            // Get this doctor's specific ratings and average
-            List<Double> doctorRatings = scores.get(doctorId);
-            double avg = getAvgRateForDoctor(doctorId); // Use the static helper
+        // Get this doctor's specific ratings and average
+        List<Double> doctorRatings = scores.get(doctorId);
+        double avg = getAvgRateForDoctor(doctorId); // Use the static helper
 
-            //Print only this doctor's details
-            System.out.println("Ratings: " + doctorRatings);
-            System.out.println("Average: " + String.format("%.2f", avg));
+        //Print only this doctor's details
+        System.out.println("Ratings: " + doctorRatings);
+        System.out.println("Average: " + String.format("%.2f", avg));
 
 
 
@@ -92,7 +113,7 @@ public class Rate {
 //                return;
 //            }
 //
-//            System.out.println("\n Doctor Ratings:");
+//            System.out.println("\n com.clinicSystem.model.Doctor Ratings:");
 //            for (Map.Entry<Integer, List<Double>> entry : scores.entrySet()) {
 //                int doctorId = entry.getKey();
 //                //List<Double> doctorRatings = entry.getValue();
@@ -101,12 +122,11 @@ public class Rate {
 ////                for (double r : doctorRatings) sum += r;
 ////                double avg = sum / doctorRatings.size();
 //
-//                System.out.println("Doctor ID: " + doctorId +
+//                System.out.println("com.clinicSystem.model.Doctor ID: " + doctorId +
 //                        " | Ratings: " + doctorRatings +
 //                        " | Avg: " + String.format("%.2f", avg));
 //            }
 //
 //            System.out.println("\n Overall Avg Rating: " + String.format("%.2f", getAvgRateForDoctor()));
-        }
     }
-
+}

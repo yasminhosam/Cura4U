@@ -1,6 +1,6 @@
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Reservation {
@@ -11,11 +11,12 @@ public class Reservation {
     private int doctorId;
     private LocalDateTime dateTime;
     private String status;
+    private Double currentRating=null;
     private static final String STATUS_CONFIRMED = "Confirmed";
     private static final String STATUS_CANCELLED = "Cancelled";
 
     // Encapsulated: Changed from public to private
-    private static List<Reservation> reservations = new ArrayList<Reservation>();
+    private static List<Reservation> reservations = new ArrayList<>();
 
     public Reservation(int patientId, int doctorId, LocalDateTime dateTime) {
         ctrReservation++;
@@ -26,6 +27,16 @@ public class Reservation {
         this.status = STATUS_CONFIRMED;//by default
     }
     //getters
+
+
+    public Double getCurrentRating() {
+        return currentRating;
+    }
+
+    public void setCurrentRating(Double currentRating) {
+        this.currentRating = currentRating;
+    }
+
     public int getId() {
         return id;
     }
@@ -52,10 +63,21 @@ public class Reservation {
     public static List<Reservation> getAllReservations() {
         return reservations;
     }
+
     public void cancelReservation() {
+        Doctor doctor = Doctor.getDoctorById(doctorId);
+        if (doctor != null) {
+            doctor.getSchedule().cancelSlot(dateTime);
+        }
         this.status = STATUS_CANCELLED;
+
     }
 
+    public void dispalyReservation(){
+        User doctor=User.getUserById(doctorId);
+        User patient=User.getUserById(patientId);
+        System.out.println("Patient : "+patient.getName()+",Doctor :"+doctor.getName()+", Slot :"+dateTime);
+    }
     //toString()
     @Override
     public String toString() {
@@ -107,8 +129,6 @@ public class Reservation {
             return null;
         }
     }
-
-
 
 
 

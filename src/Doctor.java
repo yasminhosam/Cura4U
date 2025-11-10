@@ -8,6 +8,7 @@ public class Doctor extends User {
     private String description;
     private Schedule schedule;
 
+    //static HashMap<Integer, List<com.clinicSystem.model.Reservation>> docterReservations = new HashMap<>();
     private static List<Doctor> doctors=new ArrayList<>();
 
     public String getAddress() {

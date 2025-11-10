@@ -1,5 +1,9 @@
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 public class User {
 
     private static ArrayList<User> users = new ArrayList<>();
@@ -9,6 +13,8 @@ public class User {
     private static int cntUsers = 0;
     private static User currentUser=null;
 
+   // public static Map<Integer, List<Reservation>> reservations = new HashMap<>();
+    Reservation reservation;
     public User(String name, String email, int phone, String password, String role) {
         cntUsers++;
         this.id = cntUsers;
@@ -17,6 +23,22 @@ public class User {
         this.phone = phone;
         this.password = password;
         this.role = role;
+    }
+
+    public static void setUsers(ArrayList<User> users) {
+        User.users = users;
+    }
+
+    public static ArrayList<User> getUsers() {
+        return users;
+    }
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User currentUser) {
+        User.currentUser = currentUser;
     }
 
     public String getName() {
@@ -99,7 +121,7 @@ public class User {
     }
 
     public static void logout(){
-//        User user=users.stream()
+//        com.clinicSystem.model.User user=users.stream()
 //                .filter(u->u.id == this.id)
 //                .findFirst()
 //                .orElse(null);
@@ -110,17 +132,38 @@ public class User {
         else
             System.out.println("User not found!");
     }
-    public void viewReservations(){
+    public static User getUserById(int id){
+        User user=users.stream()
+                .filter(u->u.id==id)
+                .findFirst()
+                .orElse(null);
+        return user;
+    }
+    public void viewReservations() {
 
         List<Reservation> userReservations=Reservation.getAllReservations().stream()
                 .filter(r-> r.getDoctorId()==this.id || r.getPatientId()==this.id)
                 .toList();
+//        for (Map.Entry<Integer, List<Reservation>> entry : reservations.entrySet()) {
+//            List<Reservation> userReservations = entry.getValue();
+            if (userReservations.isEmpty())
+                System.out.println("No reservations found for you");
+            else {
+                System.out.println("Reservation for " + this.name + ":");
+                userReservations.forEach(u->u.dispalyReservation());
+            }
+      //  }
+    }
 
-        if(userReservations.isEmpty())
-            System.out.println("No reservations found for you");
-        else {
-            System.out.println("Reservation for "+this.name+":");
-            userReservations.forEach(System.out::println);
+    public void cancelReservation(Reservation reservation) {
+        // First, check if this reservation actually belongs to this patient
+        if (reservation.getPatientId() != this.id) {
+            System.out.println("Error: You can only cancel your own reservations.");
+            return;
         }
+
+        // If it's theirs, call the existing cancel logic
+        reservation.cancelReservation(); //
+        System.out.println("Reservation " + reservation.getId() + " has been successfully cancelled by " + this.name);
     }
 }

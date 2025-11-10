@@ -1,10 +1,11 @@
-import javax.xml.crypto.Data;
+
 import java.time.LocalDateTime;
 import java.util.*;
 
 public class Schedule {
-    protected  Map<LocalDateTime,Boolean> slots=new HashMap<>();
-  //  private List<LocalDateTime> slots = new ArrayList<>();
+
+    protected  Map<LocalDateTime,Boolean> slots=new TreeMap<>();
+    //  private List<LocalDateTime> slots = new ArrayList<>();
 
     public void addSlot(LocalDateTime slot) {
         if (!slots.containsKey(slot)) {
@@ -21,6 +22,13 @@ public class Schedule {
             System.out.println(slot + " removed from Schedule");
         }else {
             System.out.println(slot + " not in Schedule");
+        }
+    }
+
+    public void cancelSlot(LocalDateTime slot) {
+        if (slots.containsKey(slot)) {
+            slots.put(slot,false ); // Set status to "true" (Booked)
+            System.out.println("Slot " + slot + " has been cancelled.");
         }
     }
 

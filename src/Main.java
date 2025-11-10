@@ -1,132 +1,163 @@
 import java.time.LocalDateTime;
+import java.util.List;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
+
     public static void main(String[] args) {
-        System.out.println("--- Clinic Reservation System Test ---");
+        // Helper to create some specific times for testing
+        LocalDateTime t1 = LocalDateTime.of(2025, 11, 20, 10, 0); // Nov 20, 10:00 AM
+        LocalDateTime t2 = LocalDateTime.of(2025, 11, 20, 11, 0); // Nov 20, 11:00 AM
+        LocalDateTime t3 = LocalDateTime.of(2025, 11, 20, 12, 0); // Nov 20, 12:00 PM
+        LocalDateTime t4_invalid = LocalDateTime.of(2025, 11, 20, 14, 0); // Nov 20, 2:00 PM
 
-        // --- 1. User & Doctor/Patient Setup ---
-        System.out.println("\n--- 1. Signing up users ---");
-        Doctor drSmith = new Doctor("Dr. Smith", "smith@clinic.com", 12345, "pass_doc1");
-        Doctor drJones = new Doctor("Dr. Jones", "jones@clinic.com", 67890, "pass_doc2");
-        Patient alice = new Patient("Alice", "alice@mail.com", 11111, "pass_patient1");
-        Patient bob = new Patient("Bob", "bob@mail.com", 22222, "pass_patient2");
+        System.out.println("--- 1. SYSTEM SETUP: SIGNING UP USERS ---");
 
-        User.signUp(drSmith);
-        User.signUp(drJones);
-        User.signUp(alice);
-        User.signUp(bob);
+        // Sign up Doctors
+        Doctor drHouse = new Doctor("Dr. House", "house@example.com", 12345, "pass123"); //
+        Doctor drWilson = new Doctor("Dr. Wilson", "wilson@example.com", 54321, "pass456"); //
+        User.signUp(drHouse); //
+        User.signUp(drWilson); //
 
-        // Test duplicate sign-up
-        User.signUp(new Patient("Alice", "alice@mail.com", 333, "pass"));
+        // Sign up Patients
+        Patient alice = new Patient("Alice", "alice@example.com", 98765, "alice_pass"); //
+        Patient bob = new Patient("Bob", "bob@example.com", 67890, "bob_pass"); //
+        User.signUp(alice); //
+        User.signUp(bob); //
 
-        // Add clinic info
-        drSmith.addClinicInfo("123 Main St", 150.00, "Cardiology", "Heart specialist");
-        drJones.addClinicInfo("456 Oak Ave", 100.00, "General", "General practitioner");
 
-        // --- 2. Login & Logout Test ---
-        System.out.println("\n--- 2. Login/Logout Test ---");
-        User.login("Alice", "badpass"); // Fail
-        User.login("Alice", "pass_patient1"); // Success
-        User.logout(); // Success
-        User.logout(); // Fail (no one logged in)
+        System.out.println("\n\n--- 2. DOCTOR WORKFLOW: SETUP SCHEDULE ---");
 
-        // --- 3. Doctor Schedule Setup ---
-        System.out.println("\n--- 3. Doctor Schedule Setup ---");
+        // Dr. House logs in to set up his profile
+        User.login("Dr. House", "pass123"); //
+        drHouse.addClinicInfo("123 Main St", 150.0, "Diagnostics", "Specializes in rare diseases"); //
 
-        // Create some time slots
-        LocalDateTime slot1 = LocalDateTime.of(2025, 11, 10, 9, 0);  // Nov 10, 9:00 AM
-        LocalDateTime slot2 = LocalDateTime.of(2025, 11, 10, 10, 0); // Nov 10, 10:00 AM
-        LocalDateTime slot3 = LocalDateTime.of(2025, 11, 11, 9, 0);  // Nov 11, 9:00 AM
+        System.out.println("\n[Dr. House] Adding slots...");
+        drHouse.getSchedule().addSlot(t1); //
+        drHouse.getSchedule().addSlot(t2); //
+        drHouse.getSchedule().addSlot(t3); //
+        drHouse.getSchedule().displaySlots(); //
+        User.logout(); //
 
-        System.out.println("Dr. Smith's Schedule:");
-        drSmith.getSchedule().addSlot(slot1);
-        drSmith.getSchedule().addSlot(slot2);
-        drSmith.getSchedule().displaySlots();
+        // Dr. Wilson logs in to set up his profile
+        User.login("Dr. Wilson", "pass456"); //
+        drWilson.addClinicInfo("456 Oak Ave", 100.0, "Oncology", "Cancer specialist"); //
 
-        System.out.println("\nDr. Jones's Schedule:");
-        drJones.getSchedule().addSlot(slot1); // Same time, different doctor (tests non-static)
-        drJones.getSchedule().addSlot(slot3);
-        drJones.getSchedule().displaySlots();
+        System.out.println("\n[Dr. Wilson] Adding slots...");
+        drWilson.getSchedule().addSlot(t1); //
+        drWilson.getSchedule().addSlot(t2); //
+        drWilson.getSchedule().displaySlots(); //
+        User.logout(); //
 
-        // --- 4. Patient Booking Scenario ---
-        System.out.println("\n--- 4. Patient Booking Scenario ---");
-        System.out.println("Alice views 'General' doctors:");
-        alice.viewDoctorsByDepartment("General").forEach(doc -> System.out.println("- " + doc.getName()));
 
-        System.out.println("\nBooking appointments...");
-        // Alice books Dr. Smith
-        Reservation res1 = alice.bookAppointment(drSmith, slot1);
+        System.out.println("\n\n--- 3. PATIENT WORKFLOW: BOOKING (ALICE) ---");
+        User.login("Alice", "alice_pass"); //
 
-        // Bob books Dr. Smith
-        Reservation res2 = bob.bookAppointment(drSmith, slot2);
+        System.out.println("\n[Alice] Searching for 'Diagnostics' doctors...");
+        List<Doctor> diagnosticsDocs = alice.viewDoctorsByDepartment("Diagnostics"); //
+        diagnosticsDocs.forEach(d -> System.out.println(" - Found: " + d.getName()));
 
-        // Alice tries to book the same slot (res1)
-        System.out.println("\nAlice tries to double-book Dr. Smith at 9:00 AM...");
-        Reservation res3 = alice.bookAppointment(drSmith, slot1); // Should fail
+        // Test Case 1: Successful Booking
+        System.out.println("\n[Alice] Booking Dr. House at 10:00 AM...");
+        Reservation resAlice1 = alice.bookAppointment(drHouse, t1); //
 
-        // Bob books Dr. Jones at the same time Alice booked Dr. Smith
-        System.out.println("\nBob books Dr. Jones at 9:00 AM (should succeed)...");
-        Reservation res4 = bob.bookAppointment(drJones, slot1); // Should succeed
+        // Test Case 2: Successful Booking (Different Doctor, Same Time)
+        System.out.println("\n[Alice] Booking Dr. Wilson at 10:00 AM...");
+        Reservation resAlice2 = alice.bookAppointment(drWilson, t1); //
 
-        // --- 5. Check Schedule & Reservation Status ---
-        System.out.println("\n--- 5. Checking Schedules After Booking ---");
-        System.out.println("Dr. Smith's Schedule (should show 2 booked slots):");
-        drSmith.getSchedule().displaySlots();
+        System.out.println("\n[Alice] Viewing her reservations:");
+        alice.viewReservations(); // Tests the User.viewReservations() method
+        User.logout(); //
 
-        System.out.println("\nDr. Jones's Schedule (should show 1 booked slot):");
-        drJones.getSchedule().displaySlots();
+        System.out.println("\n\n--- 4. PATIENT WORKFLOW: BOOKING (BOB) ---");
+        User.login("Bob", "bob_pass"); //
 
-        System.out.println("\n--- Checking User Reservations ---");
-        System.out.println("Alice's Reservations:");
-        alice.viewReservations();
+        // Test Case 3: Failed Booking (Slot taken by Alice)
+        System.out.println("\n[Bob] Attempting to book Dr. House at 10:00 AM (taken by Alice)...");
+        bob.bookAppointment(drHouse, t1); //
 
-        System.out.println("\nBob's Reservations:");
-        bob.viewReservations();
+        // Test Case 4: Successful Booking
+        System.out.println("\n[Bob] Booking Dr. House at 11:00 AM...");
+        Reservation resBob1 = bob.bookAppointment(drHouse, t2); //
 
-        System.out.println("\nDr. Smith's Reservations:");
-        drSmith.viewReservations();
+        System.out.println("\n[Bob] Viewing his reservations:");
+        bob.viewReservations(); //
+        User.logout(); //
 
-        // --- 6. Test Cancellation ---
-        System.out.println("\n--- 6. Testing Cancellation ---");
-        System.out.println("Alice cancels her appointment (res1)...");
-        if (res1 != null) {
-            res1.cancelReservation();
+
+        System.out.println("\n\n--- 5. VERIFICATION: CHECK DOCTOR SCHEDULE ---");
+        User.login("Dr. House", "pass123"); //
+        System.out.println("\n[Dr. House] Viewing his final schedule:");
+        drHouse.getSchedule().displaySlots(); // 10:00 and 11:00 should be "Not Available"
+
+        System.out.println("\n[Dr. House] Viewing his reservations (using fixed User.viewReservations)...");
+        drHouse.viewReservations(); // This should now show Alice's and Bob's reservations
+        User.logout(); //
+
+
+        System.out.println("\n\n--- 6. CANCELLATION WORKFLOW (ALICE) ---");
+        User.login("Alice", "alice_pass"); //
+        System.out.println("\n[Alice] Cancelling appointment with Dr. House at 10:00 AM...");
+        if (resAlice1 != null) {
+            alice.cancelReservation(resAlice1); // Uses the method from User.java
+        }
+        User.logout(); //
+
+
+        System.out.println("\n\n--- 7. VERIFICATION: POST-CANCELLATION ---");
+
+        // Bob can now book the cancelled slot
+        User.login("Bob", "bob_pass"); //
+        System.out.println("\n[Bob] Attempting to book Dr. House at 10:00 AM (now available)...");
+        Reservation resBob2 = bob.bookAppointment(drHouse, t1); //
+        if (resBob2 != null) {
+            System.out.println("Booking successful!");
+        }
+        User.logout(); //
+
+
+        System.out.println("\n\n--- 8. RATING WORKFLOW (TESTING UPDATE LOGIC) ---");
+
+        // Bob rates his reservations for Dr. House
+        if (resBob1 != null) { // 11:00 slot
+            System.out.println("\n[Bob] Giving first-time rating for reservation " + resBob1.getId());
+            bob.rateDoctor(resBob1, 5.0); // Should be a NEW rating
+        }
+        if (resBob2 != null) { // 10:00 slot
+            System.out.println("\n[Bob] Giving first-time rating for reservation " + resBob2.getId());
+            bob.rateDoctor(resBob2, 4.0); // Should be a NEW rating
         }
 
-        System.out.println("Dr. Smith's Schedule (slot1 should be 'Available' again):");
-        drSmith.getSchedule().displaySlots();
+        // Alice rates Dr. Wilson
+        if (resAlice2 != null) {
+            System.out.println("\n[Alice] Giving first-time rating for reservation " + resAlice2.getId());
+            alice.rateDoctor(resAlice2, 4.0); //
+        }
 
-        System.out.println("\nAlice's Reservations (should show 'Cancelled'):");
-        // We'd have to update toString() or viewReservations() to show status,
-        // but the schedule logic is the main proof.
-        alice.viewReservations();
+        System.out.println("\n--- [TEST] Bob updates his first rating ---");
+        if (resBob1 != null) { // 11:00 slot
+            System.out.println("[Bob] Updating rating for reservation " + resBob1.getId() + "...");
+            bob.rateDoctor(resBob1, 2.0); // Should UPDATE the 5.0 to 2.0
+        }
 
-        // --- 7. Test Rating System ---
-        System.out.println("\n--- 7. Testing Rating System ---");
-        // Bob rates Dr. Smith (res2)
-        Rate rate1 = new Rate(res2);
-        rate1.rateDoctor(5.0);
 
-        // Bob rates Dr. Jones (res4)
-        Rate rate2 = new Rate(res4);
-        rate2.rateDoctor(3.0);
+        System.out.println("\n\n--- 9. VERIFICATION: CHECK FINAL RATINGS ---");
 
-        // Alice rates Dr. Smith (res1, even though cancelled)
-        Rate rate3 = new Rate(res1);
-        rate3.rateDoctor(4.0);
+        // Dr. House's ratings should be [4.0, 2.0] (the 5.0 was removed and replaced by 2.0)
+        // Average = (4.0 + 2.0) / 2 = 3.0
+        double houseAvg = Rate.getAvgRateForDoctor(drHouse.getId()); //
 
-        System.out.println("\n--- Testing Instance viewRates (Alice's rating for Dr. Smith) ---");
-        rate3.viewRates();
-//
-//        System.out.println("\n--- Testing Static viewAllDoctorRates (Admin View) ---");
-//        // Add the static viewAllDoctorRates to your Rate.java to run this
-//        // Rate.viewAllDoctorRates();
-//        // Example of calling the static helper:
-//        System.out.println("Dr. Smith's avg: " + Rate.getAvgRateForDoctor(drSmith.getId()));
-//        System.out.println("Dr. Jones's avg: " + Rate.getAvgRateForDoctor(drJones.getId()));
-//
-        System.out.println("\n--- Test Complete ---");
+        // Dr. Wilson's ratings should be [4.0]
+        // Average = 4.0 / 1 = 4.0
+        double wilsonAvg = Rate.getAvgRateForDoctor(drWilson.getId()); //
+
+        System.out.println("Dr. House Average (should be 3.0): " + houseAvg);
+        System.out.println("Dr. Wilson Average (should be 4.0): " + wilsonAvg);
+
+        // Test the instance-based viewRates()
+        System.out.println("\n[Test] Viewing rates from Bob's first reservation object:");
+        if (resBob1 != null) {
+            Rate testRateView = new Rate(resBob1); //
+            testRateView.viewRates(); // Should show ONLY Dr. House's ratings [4.0, 2.0]
+        }
     }
 }
