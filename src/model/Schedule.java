@@ -1,3 +1,4 @@
+package model;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -10,18 +11,18 @@ public class Schedule {
     public void addSlot(LocalDateTime slot) {
         if (!slots.containsKey(slot)) {
             slots.put(slot,false);
-            System.out.println(slot + " added to Schedule");
+            System.out.println(slot + " added to model.Schedule");
         } else {
-            System.out.println(slot + " already in Schedule");
+            System.out.println(slot + " already in model.Schedule");
         }
     }
 
     public void removeSlot(LocalDateTime slot) {
         if (slots.containsKey(slot)) {
             slots.remove(slot);
-            System.out.println(slot + " removed from Schedule");
+            System.out.println(slot + " removed from model.Schedule");
         }else {
-            System.out.println(slot + " not in Schedule");
+            System.out.println(slot + " not in model.Schedule");
         }
     }
 
@@ -40,7 +41,7 @@ public class Schedule {
     }
     public void displaySlots(){
         if (slots.isEmpty()){
-            System.out.println("No slots in Schedule");
+            System.out.println("No slots in model.Schedule");
         }else{
             System.out.println("All slots:");
             for (Map.Entry<LocalDateTime, Boolean> slot : slots.entrySet()){

@@ -1,21 +1,20 @@
+package model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class User {
 
     private static ArrayList<User> users = new ArrayList<>();
     protected String name, email, password, role;
     protected int id;
-    protected int phone;
+    protected String phone;
     private static int cntUsers = 0;
     private static User currentUser=null;
 
-   // public static Map<Integer, List<Reservation>> reservations = new HashMap<>();
+   // public static Map<Integer, List<model.Reservation>> reservations = new HashMap<>();
     Reservation reservation;
-    public User(String name, String email, int phone, String password, String role) {
+    public User(String name, String email, String phone, String password, String role) {
         cntUsers++;
         this.id = cntUsers;
         this.name = name;
@@ -81,11 +80,11 @@ public class User {
         this.id = id;
     }
 
-    public int getPhone() {
+    public String getPhone() {
         return phone;
     }
 
-    public void setPhone(int phone) {
+    public void setPhone(String phone) {
         this.phone = phone;
     }
 
@@ -94,7 +93,7 @@ public class User {
         boolean exists = users.stream()
                 .anyMatch(u -> u.email.equals(user.email) || u.name.equals(user.name));
         if(exists){
-            System.out.println("User with this name or email already exists!");
+            System.out.println("model.User with this name or email already exists!");
             return;
         }
 
@@ -121,16 +120,17 @@ public class User {
     }
 
     public static void logout(){
-//        com.clinicSystem.model.User user=users.stream()
+//        com.clinicSystem.model.model.User user=users.stream()
 //                .filter(u->u.id == this.id)
 //                .findFirst()
 //                .orElse(null);
+
         if(currentUser !=null){
             System.out.println(currentUser.getName() + " logged out successfully.");
             currentUser=null;
         }
         else
-            System.out.println("User not found!");
+            System.out.println("model.User not found!");
     }
     public static User getUserById(int id){
         User user=users.stream()
@@ -141,15 +141,15 @@ public class User {
     }
     public void viewReservations() {
 
-        List<Reservation> userReservations=Reservation.getAllReservations().stream()
+        List<Reservation> userReservations= Reservation.getAllReservations().stream()
                 .filter(r-> r.getDoctorId()==this.id || r.getPatientId()==this.id)
                 .toList();
-//        for (Map.Entry<Integer, List<Reservation>> entry : reservations.entrySet()) {
-//            List<Reservation> userReservations = entry.getValue();
+//        for (Map.Entry<Integer, List<model.Reservation>> entry : reservations.entrySet()) {
+//            List<model.Reservation> userReservations = entry.getValue();
             if (userReservations.isEmpty())
                 System.out.println("No reservations found for you");
             else {
-                System.out.println("Reservation for " + this.name + ":");
+                System.out.println("model.Reservation for " + this.name + ":");
                 userReservations.forEach(u->u.dispalyReservation());
             }
       //  }
@@ -164,6 +164,6 @@ public class User {
 
         // If it's theirs, call the existing cancel logic
         reservation.cancelReservation(); //
-        System.out.println("Reservation " + reservation.getId() + " has been successfully cancelled by " + this.name);
+        System.out.println("model.Reservation " + reservation.getId() + " has been successfully cancelled by " + this.name);
     }
 }

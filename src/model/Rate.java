@@ -1,3 +1,6 @@
+package model;
+
+import model.Doctor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,7 +49,7 @@ public class Rate {
             doctorRatings.add(score);
             // 2. Save the rating to the reservation
             reservation.setCurrentRating(score);
-            System.out.println(" Added rating " + score + " for Doctor " + reservation.getDoctorId());
+            System.out.println(" Added rating " + score + " for model.Doctor " + reservation.getDoctorId());
         }
     }
 
@@ -87,8 +90,8 @@ public class Rate {
     public void viewRates() {
         // Get the specific doctor ID from the instance's reservation
         int doctorId = this.reservation.getDoctorId();
-        Doctor doctor=Doctor.getDoctorById(doctorId);
-        System.out.println("\nRatings for Doctor ID: " + doctor.getName());
+        Doctor doctor= Doctor.getDoctorById(doctorId);
+        System.out.println("\nRatings for model.Doctor ID: " + doctor.getName());
 
         // Check if this specific doctor has any ratings
         if (!scores.containsKey(doctorId) || scores.get(doctorId).isEmpty()) {
@@ -113,7 +116,7 @@ public class Rate {
 //                return;
 //            }
 //
-//            System.out.println("\n com.clinicSystem.model.Doctor Ratings:");
+//            System.out.println("\n com.clinicSystem.model.model.Doctor Ratings:");
 //            for (Map.Entry<Integer, List<Double>> entry : scores.entrySet()) {
 //                int doctorId = entry.getKey();
 //                //List<Double> doctorRatings = entry.getValue();
@@ -122,7 +125,7 @@ public class Rate {
 ////                for (double r : doctorRatings) sum += r;
 ////                double avg = sum / doctorRatings.size();
 //
-//                System.out.println("com.clinicSystem.model.Doctor ID: " + doctorId +
+//                System.out.println("com.clinicSystem.model.model.Doctor ID: " + doctorId +
 //                        " | Ratings: " + doctorRatings +
 //                        " | Avg: " + String.format("%.2f", avg));
 //            }

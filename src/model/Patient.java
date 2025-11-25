@@ -1,11 +1,15 @@
+package model;
+
+import model.User;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Patient  extends User {
-    //    static HashMap<Integer, List<com.clinicSystem.model.Reservation>> patientReservations = new HashMap<>();
-    public Patient(String name, String email, int phone, String password ) {
+    //    static HashMap<Integer, List<com.clinicSystem.model.model.Reservation>> patientReservations = new HashMap<>();
+    public Patient(String name, String email, String phone, String password ) {
         super(name, email, phone, password, "patient");
 
     }
@@ -46,8 +50,8 @@ public class Patient  extends User {
             return;
         }
 
-        // This encapsulates the 'Rate' object creation
-        // The main file no longer needs to know about the Rate class
+        // This encapsulates the 'model.Rate' object creation
+        // The main file no longer needs to know about the model.Rate class
         Rate newRating = new Rate(reservation); //
         newRating.addingRate(score); //
     }

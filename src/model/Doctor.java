@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,7 +10,7 @@ public class Doctor extends User {
     private String description;
     private Schedule schedule;
 
-    //static HashMap<Integer, List<com.clinicSystem.model.Reservation>> docterReservations = new HashMap<>();
+    //static HashMap<Integer, List<com.clinicSystem.model.model.Reservation>> docterReservations = new HashMap<>();
     private static List<Doctor> doctors=new ArrayList<>();
 
     public String getAddress() {
@@ -52,7 +54,7 @@ public class Doctor extends User {
     public void setSchedule(Schedule schedule) {
         this.schedule = schedule;
     }
-    public Doctor(String name, String email, int phone, String password) {
+    public Doctor(String name, String email, String phone, String password) {
         super(name, email, phone, password, "doctor");
         this.schedule = new Schedule();
     }

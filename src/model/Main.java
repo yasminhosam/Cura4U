@@ -1,3 +1,5 @@
+package model;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,14 +15,14 @@ public class Main {
         System.out.println("--- 1. SYSTEM SETUP: SIGNING UP USERS ---");
 
         // Sign up Doctors
-        Doctor drHouse = new Doctor("Dr. House", "house@example.com", 12345, "pass123"); //
-        Doctor drWilson = new Doctor("Dr. Wilson", "wilson@example.com", 54321, "pass456"); //
+        Doctor drHouse = new Doctor("Dr. House", "house@example.com", "12345", "pass123"); //
+        Doctor drWilson = new Doctor("Dr. Wilson", "wilson@example.com", "54321", "pass456"); //
         User.signUp(drHouse); //
         User.signUp(drWilson); //
 
         // Sign up Patients
-        Patient alice = new Patient("Alice", "alice@example.com", 98765, "alice_pass"); //
-        Patient bob = new Patient("Bob", "bob@example.com", 67890, "bob_pass"); //
+        Patient alice = new Patient("Alice", "alice@example.com", "98765", "alice_pass"); //
+        Patient bob = new Patient("Bob", "bob@example.com", "67890", "bob_pass"); //
         User.signUp(alice); //
         User.signUp(bob); //
 
