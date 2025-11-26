@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.login.LoginController">
+    <children>
+        <AnchorPane prefHeight="400.0" prefWidth="322.0" style="-fx-background-color: #E3F2FD;">
+            <children>
+                <ImageView fitHeight="150.0" fitWidth="162.0" layoutX="41.0" layoutY="30.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@/images/healthcare.png" />
+                    </image>
+                </ImageView>
+                <Label layoutX="35" layoutY="210" text="Cura">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="42" />
+                    </font>
+                    <style>
+                        -fx-text-fill: #0D47A1;
+                        -fx-font-weight: bold;
+                    </style>
+                </Label>
+
+                <Label layoutX="145" layoutY="210" text="4U">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="42" />
+                    </font>
+                    <style>
+                        -fx-text-fill: #1976D2;
+                        -fx-font-weight: bold;
+                    </style>
+                </Label>
+
+                <Label layoutX="27.0" layoutY="272.0" text="Clinic model.Reservation System">
+                    <font>
+                        <Font name="Arial" size="16" />
+                    </font>
+                    <style>
+                        -fx-text-fill: #0D47A1;
+                    </style>
+                </Label>
+
+            </children>
+
+        </AnchorPane>
+        <AnchorPane prefHeight="400.0" prefWidth="386.0">
+            <children>
+                <ImageView fitHeight="126.0" fitWidth="162.0" layoutX="128.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../../images/security.png" />
+                    </image>
+                </ImageView>
+                <Label layoutX="25.0" layoutY="182.0" text="Username">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                </Label>
+                <TextField fx:id="tf_username" layoutX="98.0" layoutY="178.0">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="18.0" />
+                    </font>
+                </TextField>
+                <Label layoutX="25.0" layoutY="242.0" text="Passowrd">
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                </Label>
+                <PasswordField fx:id="tf_password" layoutX="98.0" layoutY="234.0">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="18.0" />
+                    </font>
+                </PasswordField>
+                <Button fx:id="button_login" layoutX="129.0" layoutY="299.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="37.0" prefWidth="150.0" style="-fx-background-color: #1976D2;" text="Login">
+                    <font>
+                        <Font name="Arial Rounded MT Bold" size="16.0" />
+                    </font>
+                </Button>
+                <Label layoutX="140.0" layoutY="347.0" text="Not a user?" >
+                    <font>
+                        <Font name="System Bold" size="12.0" />
+                    </font>
+                </Label>
+            <Button fx:id="button_signup" layoutX="204.0" layoutY="343.0" mnemonicParsing="false" onAction="#handleSignUp" style="-fx-background-color: transparent;" text="Sign Up" textFill="#1d3cd7" underline="true" >
+                <font>
+                    <Font name="Arial Rounded MT Bold" size="14.0" />
+                </font>
+            </Button>
+                <Label fx:id="messageLabel" layoutX="100.0" layoutY="380.0" textFill="RED" />
+            </children>
+        </AnchorPane>
+    </children>
+</HBox>
